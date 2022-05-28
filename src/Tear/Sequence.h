@@ -4,8 +4,10 @@
 #include <array>
 #include "Key.h"
 
-namespace Tear {
-	struct ModeSequence {
+namespace Tear 
+{
+	struct ModeSequence 
+	{
 		std::string caListener;
 		std::string caExit;
 
@@ -16,7 +18,8 @@ namespace Tear {
 		std::string mouseExit;
 	};
 
-	struct CommandSequence {
+	struct CommandSequence 
+	{
 		std::string cursorShown;
 		std::string cursorHidden;
 
@@ -27,35 +30,38 @@ namespace Tear {
 		std::string blink;
 		std::string reverse;
 
-		std::string move(int x, int y) {
+		std::string Move(int x, int y) const
+		{
 			return "\033[" + std::to_string(y + 1) + ";" + std::to_string(x + 1) + "H";
 		}
 	};
 
-	struct KeySequence {
+	struct KeySequence 
+	{
 		// not using unordered map because these guys
 		// mostly used in iteration not lookup
 		std::array<std::string, 22> data;
 
 		// lookup reference
 		static constexpr std::array<Key, 22> references = {
-			Key::f1, Key::f2, Key::f3, Key::f4, 
-			Key::f5, Key::f6, Key::f7, Key::f8, 
-			Key::f9, Key::f10, Key::f11, Key::f12,
+			Key::F1, Key::F2, Key::F3, Key::F4, 
+			Key::F5, Key::F6, Key::F7, Key::F8, 
+			Key::F9, Key::F10, Key::F11, Key::F12,
 
-			Key::insert, Key::delete_, 
-			Key::home, Key::end,
-			Key::pageUp, Key::pageDown,
+			Key::Insert, Key::Delete, 
+			Key::Home, Key::End,
+			Key::PageUp, Key::PageDown,
 
-			Key::up, Key::down, Key::left, Key::right
+			Key::Up, Key::Down, Key::Left, Key::Right
 		};
 	};
 
-	struct Sequence {
+	struct Sequence 
+	{
 		ModeSequence mode;
 		CommandSequence command;
 		KeySequence key;
 
-		void compose(const std::string& term);
+		void Compose(const std::string& term);
 	};
 }

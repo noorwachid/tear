@@ -6,12 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(tear)
 
 add_library(tear
-    src/Tear/Session.h
-    src/Tear/Session.cpp
+    src/Tear/Term.h
+    src/Tear/Term.cpp
 
-	src/Tear/Node.h
-	src/Tear/Node.cpp
-	src/Tear/Cell.h
 	src/Tear/Utf8.h
 	src/Tear/Utf8.cpp
 
@@ -24,6 +21,8 @@ add_library(tear
 	src/Tear/Sequence.cpp
     src/Tear/SequenceDatabase.h
     src/Tear/SequenceDatabase.cpp
+	src/Tear/Renderer.h
+	src/Tear/Renderer.cpp
 )
 
 target_include_directories(tear PUBLIC src)

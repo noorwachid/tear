@@ -114,7 +114,7 @@ namespace Tear {
 		return data;
 	}
 
-	ModeSequence SequenceDatabase::composeMode() {
+	ModeSequence SequenceDatabase::ComposeMode() {
 		ModeSequence sequence;
 
 		const int16_t commandOffsets[] = {
@@ -131,7 +131,7 @@ namespace Tear {
 		return sequence;
 	}
 
-	CommandSequence SequenceDatabase::composeCommand() {
+	CommandSequence SequenceDatabase::ComposeCommand() {
 		CommandSequence sequence;
 
 		const int16_t commandOffsets[] = {
@@ -150,7 +150,7 @@ namespace Tear {
 		return sequence;
 	}
 
-	KeySequence SequenceDatabase::composeKey() {
+	KeySequence SequenceDatabase::ComposeKey() {
 		KeySequence sequence;
 
 		const int16_t keyOffsets[] = {

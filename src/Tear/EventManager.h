@@ -3,22 +3,12 @@
 #include "Event.h"
 #include <string>
 
-namespace Tear {
-	class EventManager {
-	public:
-		static void initialize(int inputDescriptor);
+namespace Tear::EventManager 
+{
+	void Initialize();
+	void Emit(const Event& event);
+	void Poll();
+	bool PollInput();
 
-		static void emit(const Event& event);
-
-		static void poll();
-
-	private:
-		static bool pollInput();
-	
-	private:
-		static int inputDescriptor;
-
-	public:
-		static std::string inputBuffer;
-	};
+	const std::string& GetInputSequence();
 }

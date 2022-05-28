@@ -10,9 +10,9 @@ namespace Tear {
 
 		bool exists();
 
-		ModeSequence composeMode();
-		CommandSequence composeCommand();
-		KeySequence composeKey();
+		ModeSequence ComposeMode();
+		CommandSequence ComposeCommand();
+		KeySequence ComposeKey();
 
 	private:
 		bool readFolder(const std::string& path);
