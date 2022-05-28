@@ -8,15 +8,12 @@ namespace Tear {
 
 	std::string EventManager::inputBuffer;
 
-
 	fd_set descriptors;
 	int timeoutMS = 1000; // A second
 
 	void EventManager::initialize(int inputDescriptor) {
 		EventManager::inputDescriptor = inputDescriptor;
-
-		FD_ZERO(&descriptors);
-		FD_SET(inputDescriptor, &descriptors);
+		EventManager::inputBuffer += "[" + std::to_string(inputDescriptor) + "]";
 	}
 
 	void EventManager::emit(const Event& event) {
@@ -26,6 +23,9 @@ namespace Tear {
 		struct timeval timeout;
 		timeout.tv_sec = timeoutMS / 1000;
 		timeout.tv_usec = (timeoutMS - (timeout.tv_sec * 1000)) * 1000;
+
+		FD_ZERO(&descriptors);
+		FD_SET(inputDescriptor, &descriptors);
 
 		bool active = ::select(inputDescriptor + 1, &descriptors, 0, 0, &timeout);
 		if (!active) {
@@ -42,9 +42,15 @@ namespace Tear {
 	}
 
 	bool EventManager::pollInput() {
-		std::vector<char> temporaryBuffer(64, '\0');
+		ssize_t readSize = 0;
+		ssize_t targetSize = 64;
+		std::vector<char> temporaryBuffer(targetSize, '\0');
 
-		ssize_t readSize = ::read(inputDescriptor, temporaryBuffer.data(), temporaryBuffer.size());
+		ssize_t currentSize = ::read(
+			inputDescriptor,
+			temporaryBuffer.data() + readSize,
+			temporaryBuffer.size() - readSize
+		);
 
 		inputBuffer += std::string(temporaryBuffer.data(), readSize);
 

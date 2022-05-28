@@ -3,19 +3,16 @@
 #include "Sequence.h"
 
 namespace Tear {
-	class SequenceManager {
+	class SequenceDatabase {
 	public:
-		SequenceManager(const std::string& term);
-
-		~SequenceManager();
+		SequenceDatabase(const std::string& term);
+		~SequenceDatabase();
 
 		bool exists();
 
-		Sequence compose();
-
-		OutputSequence composeOutput();
-
-		InputSequence composeInput();
+		ModeSequence composeMode();
+		CommandSequence composeCommand();
+		KeySequence composeKey();
 
 	private:
 		bool readFolder(const std::string& path);

@@ -3,34 +3,33 @@ cmake_minimum_required(VERSION 3.9)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(Tear)
+project(tear)
 
-add_library(Tear
-    Source/Tear/Term.cpp
-    Source/Tear/Term.h
+add_library(tear
+    src/Tear/Session.h
+    src/Tear/Session.cpp
 
-	Source/Tear/Renderer.cpp
-	Source/Tear/Renderer.h
-	Source/Tear/Node.cpp
-	Source/Tear/Node.h
-	Source/Tear/Cell.h
-	Source/Tear/Utf8.cpp
-	Source/Tear/Utf8.h
+	src/Tear/Node.h
+	src/Tear/Node.cpp
+	src/Tear/Cell.h
+	src/Tear/Utf8.h
+	src/Tear/Utf8.cpp
 
-    Source/Tear/Event.h
-	Source/Tear/EventManager.cpp
-	Source/Tear/EventManager.h
-    Source/Tear/Key.cpp
-    Source/Tear/Key.h
-	Source/Tear/Sequence.h
-    Source/Tear/SequenceManager.cpp
-    Source/Tear/SequenceManager.h
+    src/Tear/Event.h
+	src/Tear/EventManager.h
+	src/Tear/EventManager.cpp
+    src/Tear/Key.h
+    src/Tear/Key.cpp
+	src/Tear/Sequence.h
+	src/Tear/Sequence.cpp
+    src/Tear/SequenceDatabase.h
+    src/Tear/SequenceDatabase.cpp
 )
 
-target_include_directories(Tear PUBLIC Source)
+target_include_directories(tear PUBLIC src)
 
-add_executable(Tear_Application
-	Source/EntryPoint.cpp
+add_executable(tear_application
+	src/EntryPoint.cpp
 )
-target_link_libraries(Tear_Application Tear)
+target_link_libraries(tear_application tear)
 

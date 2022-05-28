@@ -20,7 +20,7 @@ namespace Tear {
     };
 
     struct KeyEvent: public Event {
-        CodePoint codePoint;
+        uint32_t codePoint;
         Key key;
         ModifierKey modifierKey;
     };

@@ -1,4 +1,4 @@
-#include "SequenceManager.h"
+#include "SequenceDatabase.h"
 
 #include <sys/select.h>
 #include <sys/stat.h>
@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 namespace Tear {
-	SequenceManager::SequenceManager(const std::string& term) {
+	SequenceDatabase::SequenceDatabase(const std::string& term) {
 		data = nullptr;
 
 		if (term.empty()) {
@@ -28,14 +28,14 @@ namespace Tear {
 		readFolder("/usr/share/terminfo");
 	}
 
-	SequenceManager::~SequenceManager() {
+	SequenceDatabase::~SequenceDatabase() {
 		if (data) {
 			delete[] data;
 			data = nullptr;
 		}
 	}
 
-	bool SequenceManager::readFile(const std::string& path) {
+	bool SequenceDatabase::readFile(const std::string& path) {
 		FILE *file = ::fopen(path.c_str(), "rb");
 		if (!file) {
 			return false;
@@ -63,7 +63,7 @@ namespace Tear {
 		return true;
 	}
 
-	bool SequenceManager::readFolder(const std::string& prefixPath) {
+	bool SequenceDatabase::readFolder(const std::string& prefixPath) {
 		char tmp[4096];
 
 		// GNU/Linux
@@ -85,7 +85,7 @@ namespace Tear {
 		return false;
 	}
 
-	char* SequenceManager::duplicate(int str, int table) {
+	char* SequenceDatabase::duplicate(int str, int table) {
 		const int16_t off = *(int16_t*) (data + str);
 		const char *src = data + table + off;
 		int len = strlen(src);
@@ -95,7 +95,7 @@ namespace Tear {
 		return dst;
 	}
 
-	void SequenceManager::calculateOffsets() {
+	void SequenceDatabase::calculateOffsets() {
 		alternateSlice = 542;
 		headerSize = 12;
 		header = (int16_t*) data;
@@ -110,12 +110,12 @@ namespace Tear {
 		tableOffset = stringOffset + 2 * header[4];
 	}
 
-	bool SequenceManager::exists() {
+	bool SequenceDatabase::exists() {
 		return data;
 	}
 
-	Sequence SequenceManager::compose() {
-		Sequence sequence;
+	ModeSequence SequenceDatabase::composeMode() {
+		ModeSequence sequence;
 
 		const int16_t commandOffsets[] = {
 			28, 40, 16, 13, 5, 39, 36, 27, 26, 34, 89, 88,
@@ -131,8 +131,8 @@ namespace Tear {
 		return sequence;
 	}
 
-	OutputSequence SequenceManager::composeOutput() {
-		OutputSequence sequence;
+	CommandSequence SequenceDatabase::composeCommand() {
+		CommandSequence sequence;
 
 		const int16_t commandOffsets[] = {
 			28, 40, 16, 13, 5, 39, 36, 27, 26, 34, 89, 88,
@@ -150,8 +150,8 @@ namespace Tear {
 		return sequence;
 	}
 
-	InputSequence SequenceManager::composeInput() {
-		InputSequence sequence;
+	KeySequence SequenceDatabase::composeKey() {
+		KeySequence sequence;
 
 		const int16_t keyOffsets[] = {
 			66, 68 , 69, 70, 
@@ -165,8 +165,8 @@ namespace Tear {
 			87, 61, 79, 83,
 		};
 
-		for (size_t i = 0; i < sequence.keys.size(); ++i) {
-			sequence.keys[i] = duplicate(stringOffset + 2 * keyOffsets[i], tableOffset);
+		for (size_t i = 0; i < sequence.data.size(); ++i) {
+			sequence.data[i] = duplicate(stringOffset + 2 * keyOffsets[i], tableOffset);
 		}
 
 		return sequence;

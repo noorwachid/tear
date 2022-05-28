@@ -7,6 +7,7 @@ namespace Tear {
 	using Color = uint8_t;
 
 	enum class Style {
+		none,
 		bold,
 		italic,
 		underlined,
