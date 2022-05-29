@@ -1,106 +1,101 @@
 #include "Key.h"
 
-namespace Tear 
-{
-    std::string ToString(Key key) 
-	{
-        switch (key) 
-		{
-            case Key::Backspace: return "Backspace";
-            case Key::Tab: return "Tab";
-            case Key::Enter: return "Enter";
-            case Key::Escape: return "Escape";
-            case Key::Space: return "Space";
-            case Key::Delete: return "Delete";
+namespace Tear {
+    std::string toString(Key key) {
+        switch (key) {
+            case Key::backspace: return "Backspace";
+            case Key::tab: return "Tab";
+            case Key::enter: return "Enter";
+            case Key::escape: return "Escape";
+            case Key::space: return "Space";
+            case Key::delete_: return "Delete";
 
-            case Key::Zero: return "Zero";
-            case Key::One: return "One";
-            case Key::Two: return "Two";
-            case Key::Three: return "Three";
-            case Key::Four: return "Four";
-            case Key::Five: return "Five";
-            case Key::Six: return "Six";
-            case Key::Seven: return "Seven";
-            case Key::Eight: return "Eight";
-            case Key::Nine: return "Nine";
+            case Key::zero: return "Zero";
+            case Key::one: return "One";
+            case Key::two: return "Two";
+            case Key::three: return "Three";
+            case Key::four: return "Four";
+            case Key::five: return "Five";
+            case Key::six: return "Six";
+            case Key::seven: return "Seven";
+            case Key::eight: return "Eight";
+            case Key::nine: return "Nine";
 
-            case Key::A: return "A";
-            case Key::B: return "B";
-            case Key::C: return "C";
-            case Key::D: return "D";
-            case Key::E: return "E";
-            case Key::F: return "F";
-            case Key::G: return "G";
-            case Key::H: return "H";
-            case Key::I: return "I";
-            case Key::J: return "J";
-            case Key::K: return "K";
-            case Key::L: return "L";
-            case Key::M: return "M";
-            case Key::N: return "N";
-            case Key::O: return "O";
-            case Key::P: return "P";
-            case Key::Q: return "Q";
-            case Key::R: return "R";
-            case Key::S: return "S";
-            case Key::T: return "T";
-            case Key::U: return "U";
-            case Key::V: return "V";
-            case Key::W: return "W";
-            case Key::X: return "X";
-            case Key::Y: return "Y";
-            case Key::Z: return "Z";
+            case Key::a: return "A";
+            case Key::b: return "B";
+            case Key::c: return "C";
+            case Key::d: return "D";
+            case Key::e: return "E";
+            case Key::f: return "F";
+            case Key::g: return "G";
+            case Key::h: return "H";
+            case Key::i: return "I";
+            case Key::j: return "J";
+            case Key::k: return "K";
+            case Key::l: return "L";
+            case Key::m: return "M";
+            case Key::n: return "N";
+            case Key::o: return "O";
+            case Key::p: return "P";
+            case Key::q: return "Q";
+            case Key::r: return "R";
+            case Key::s: return "S";
+            case Key::t: return "T";
+            case Key::u: return "U";
+            case Key::v: return "V";
+            case Key::w: return "W";
+            case Key::x: return "X";
+            case Key::y: return "Y";
+            case Key::z: return "Z";
 
-            case Key::F1: return "F1";
-            case Key::F2: return "F2";
-            case Key::F3: return "F3";
-            case Key::F4: return "F4";
-            case Key::F5: return "F5";
-            case Key::F6: return "F6";
-            case Key::F7: return "F7";
-            case Key::F8: return "F8";
-            case Key::F9: return "F9";
-            case Key::F10: return "F10";
-            case Key::F11: return "F11";
-            case Key::F12: return "F12";
+            case Key::f1: return "F1";
+            case Key::f2: return "F2";
+            case Key::f3: return "F3";
+            case Key::f4: return "F4";
+            case Key::f5: return "F5";
+            case Key::f6: return "F6";
+            case Key::f7: return "F7";
+            case Key::f8: return "F8";
+            case Key::f9: return "F9";
+            case Key::f10: return "F10";
+            case Key::f11: return "F11";
+            case Key::f12: return "F12";
 
-            case Key::Backtick: return "Backtick";
-            case Key::Minus: return "Minus";
-            case Key::Equal: return "Equal";
+            case Key::backtick: return "Backtick";
+            case Key::minus: return "Minus";
+            case Key::equal: return "Equal";
 
-            case Key::LeftBracket: return "LeftBracket";
-            case Key::RightBracket: return "RightBracket";
-            case Key::Backslash: return "Backslash";
+            case Key::leftBracket: return "LeftBracket";
+            case Key::rightBracket: return "RightBracket";
+            case Key::backslash: return "Backslash";
 
-            case Key::Semicolon: return "Semicolon";
-            case Key::Quote: return "Quote";
+            case Key::semicolon: return "Semicolon";
+            case Key::quote: return "Quote";
 
-            case Key::Comma: return "Comma";
-            case Key::Dot: return "Dot";
-            case Key::Slash: return "Slash";
+            case Key::comma: return "Comma";
+            case Key::dot: return "Dot";
+            case Key::slash: return "Slash";
 
-            case Key::Insert: return "Insert";
-            case Key::Home: return "Home";
-            case Key::End: return "End";
-            case Key::PageUp: return "PageUp";
-            case Key::PageDown: return "PageDown";
+            case Key::insert: return "Insert";
+            case Key::home: return "Home";
+            case Key::end: return "End";
+            case Key::pageUp: return "PageUp";
+            case Key::pageDown: return "PageDown";
 
-            case Key::Up: return "Up";
-            case Key::Down: return "Down";
-            case Key::Left: return "Left";
-            case Key::Right: return "Right";
+            case Key::up: return "Up";
+            case Key::down: return "Down";
+            case Key::left: return "Left";
+            case Key::right: return "Right";
 
             default: return "-";
         }
     }
 
-    std::string toString(ModifierKey modifierKey) 
-	{
-        switch (modifierKey) 
-        {
-            case ModifierKey::Shift: return "Shift";
-            case ModifierKey::Control: return "Control";
-            case ModifierKey::Alternate: return "Alternate";
+    std::string toString(ModifierKey modifierKey) {
+        switch (modifierKey) {
+            case ModifierKey::shift: return "Shift";
+            case ModifierKey::control: return "Control";
+            case ModifierKey::alternate: return "Alternate";
             default: return "-";
         }
     }

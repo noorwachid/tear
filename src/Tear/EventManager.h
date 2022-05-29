@@ -1,14 +1,10 @@
 #pragma once 
 
 #include "Event.h"
-#include <string>
 
-namespace Tear::EventManager 
-{
-	void Initialize();
-	void Emit(const Event& event);
-	void Poll();
-	bool PollInput();
+namespace Tear::EventManager {
+	using EventListener = std::function<void (Event&)>;
 
-	const std::string& GetInputSequence();
+	void emit(Event& event);
+	void subscribe(const std::string& type, const EventListener& listener);
 }

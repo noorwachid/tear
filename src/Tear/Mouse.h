@@ -1,11 +1,9 @@
 #pragma once
 
-namespace Tear 
-{
-	enum class MouseButton 
-	{
-		Left,
-		Right,
-		Middle,
+namespace Tear {
+	enum class MouseButton {
+		left,
+		right,
+		middle,
 	};
 }

@@ -1,28 +1,44 @@
-#include "Tear/Term.h"
+#include "Tear/Core.h"
 #include "Tear/Renderer.h"
 #include "Tear/EventManager.h"
 
-using namespace Tear;
+#include <iostream>
 
-int main() 
-{
-	Term::Initialize();
-	EventManager::Initialize();
-	Renderer::Initialize();
+std::string pad(size_t count, size_t length = 6, char character = '0') {
+	std::string t = std::to_string(count);
+	std::string s(length - t.size(), character);
 
-	size_t frameCount = 0;
-	
-	while (Term::IsOpen() && frameCount < 10) 
-	{
+	return s + t;
+}
+
+class Scene {
+public:
+	void update() {
 		++frameCount;
 
-		Renderer::Set(0, 0, "frameCount: " + std::to_string(frameCount));
-		Renderer::Set(0, 1, "😀 smile!");
-		Renderer::Set(0, 2, EventManager::GetInputSequence());
-		Renderer::Flush();
+		if (frameCount > 100000) {
+			Tear::close();
+		}
 
-		EventManager::Poll();
+		Tear::Renderer::set(0, 0, "FrameCount: " + pad(frameCount));
 	}
 
-	Term::Terminate();
+private:
+	size_t frameCount = 0;
+};
+
+int main() {
+	Tear::initialize();
+	Tear::Renderer::initialize();
+
+	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+
+	while (Tear::isOpen()) {
+		if (scene)
+			scene->update();
+
+		Tear::Renderer::swapBuffers();
+	}
+
+	Tear::terminate();
 }

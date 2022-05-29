@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(tear)
 
 add_library(tear
-    src/Tear/Term.h
-    src/Tear/Term.cpp
+    src/Tear/Core.h
+    src/Tear/Core.cpp
 
 	src/Tear/Utf8.h
 	src/Tear/Utf8.cpp

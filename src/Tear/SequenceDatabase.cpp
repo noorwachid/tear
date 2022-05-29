@@ -9,21 +9,18 @@ namespace Tear {
 	SequenceDatabase::SequenceDatabase(const std::string& term) {
 		data = nullptr;
 
-		if (term.empty()) {
+		if (term.empty()) 
 			return;
-		}
 
-		this->term = term;
+		this->termName = term;
 
 		const char* terminfoPath = ::getenv("TERMINFO");
-		if (terminfoPath && readFolder(terminfoPath)) {
+		if (terminfoPath && readFolder(terminfoPath)) 
 			return;
-		}
 
 		const char* homePath = ::getenv("HOME");
-		if (homePath && readFolder(std::string(homePath) + "/.terminfo")) {
+		if (homePath && readFolder(std::string(homePath) + "/.terminfo")) 
 			return;
-		}
 
 		readFolder("/usr/share/terminfo");
 	}
@@ -37,9 +34,8 @@ namespace Tear {
 
 	bool SequenceDatabase::readFile(const std::string& path) {
 		FILE *file = ::fopen(path.c_str(), "rb");
-		if (!file) {
+		if (!file) 
 			return false;
-		}
 
 		struct stat fileStat;
 		if (::fstat(::fileno(file), &fileStat) != 0) {
@@ -67,20 +63,18 @@ namespace Tear {
 		char tmp[4096];
 
 		// GNU/Linux
-		snprintf(tmp, sizeof(tmp), "%s/%c/%s", prefixPath.c_str(), term[0], term.c_str());
+		snprintf(tmp, sizeof(tmp), "%s/%c/%s", prefixPath.c_str(), termName[0], termName.c_str());
 		tmp[sizeof(tmp)-1] = '\0';
 
-		if (readFile(tmp)) {
+		if (readFile(tmp)) 
 			return true;
-		}
 
 		// MacOS
-		snprintf(tmp, sizeof(tmp), "%s/%x/%s", prefixPath.c_str(), term[0], term.c_str());
+		snprintf(tmp, sizeof(tmp), "%s/%x/%s", prefixPath.c_str(), termName[0], termName.c_str());
 		tmp[sizeof(tmp)-1] = '\0';
 
-		if (readFile(tmp)) {
+		if (readFile(tmp)) 
 			return true;
-		}
 
 		return false;
 	}
@@ -114,34 +108,34 @@ namespace Tear {
 		return data;
 	}
 
-	ModeSequence SequenceDatabase::ComposeMode() {
+	ModeSequence SequenceDatabase::composeMode() {
 		ModeSequence sequence;
 
 		const int16_t commandOffsets[] = {
 			28, 40, 16, 13, 5, 39, 36, 27, 26, 34, 89, 88,
 		};
 
-		sequence.caListener = duplicate(stringOffset + 2 * commandOffsets[0], tableOffset);
-		sequence.caExit = duplicate(stringOffset + 2 * commandOffsets[1], tableOffset);
-		sequence.keypadListener = duplicate(stringOffset + 2 * commandOffsets[10], tableOffset);
-		sequence.keypadExit = duplicate(stringOffset + 2 * commandOffsets[11], tableOffset);
-		sequence.mouseListener = "\x1b[?1000h\x1b[?1002h\x1b[?1015h\x1b[?1006h";
-		sequence.mouseExit = "\x1b[?1006l\x1b[?1015l\x1b[?1002l\x1b[?1000l";
+		sequence.enterCa = duplicate(stringOffset + 2 * commandOffsets[0], tableOffset);
+		sequence.exitCa = duplicate(stringOffset + 2 * commandOffsets[1], tableOffset);
+		sequence.enterKeypad = duplicate(stringOffset + 2 * commandOffsets[10], tableOffset);
+		sequence.exitKeypad = duplicate(stringOffset + 2 * commandOffsets[11], tableOffset);
+		sequence.enterMouse = "\x1b[?1000h\x1b[?1002h\x1b[?1015h\x1b[?1006h";
+		sequence.exitMouse = "\x1b[?1006l\x1b[?1015l\x1b[?1002l\x1b[?1000l";
 
 		return sequence;
 	}
 
-	CommandSequence SequenceDatabase::ComposeCommand() {
+	CommandSequence SequenceDatabase::composeCommand() {
 		CommandSequence sequence;
 
 		const int16_t commandOffsets[] = {
 			28, 40, 16, 13, 5, 39, 36, 27, 26, 34, 89, 88,
 		};
 
-		sequence.cursorShown = duplicate(stringOffset + 2 * commandOffsets[2], tableOffset);
-		sequence.cursorHidden = duplicate(stringOffset + 2 * commandOffsets[3], tableOffset);
+		sequence.showCursor = duplicate(stringOffset + 2 * commandOffsets[2], tableOffset);
+		sequence.hideCursor = duplicate(stringOffset + 2 * commandOffsets[3], tableOffset);
 		sequence.clear = duplicate(stringOffset + 2 * commandOffsets[4], tableOffset);
-		sequence.sgr0 = duplicate(stringOffset + 2 * commandOffsets[5], tableOffset);
+		sequence.reset = duplicate(stringOffset + 2 * commandOffsets[5], tableOffset);
 		sequence.underlined = duplicate(stringOffset + 2 * commandOffsets[6], tableOffset);
 		sequence.bold = duplicate(stringOffset + 2 * commandOffsets[7], tableOffset);
 		sequence.blink = duplicate(stringOffset + 2 * commandOffsets[8], tableOffset);
@@ -150,7 +144,7 @@ namespace Tear {
 		return sequence;
 	}
 
-	KeySequence SequenceDatabase::ComposeKey() {
+	KeySequence SequenceDatabase::composeKey() {
 		KeySequence sequence;
 
 		const int16_t keyOffsets[] = {
