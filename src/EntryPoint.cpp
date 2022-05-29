@@ -1,4 +1,4 @@
-#include "Tear/Core.h"
+#include "Tear/Session.h"
 #include "Tear/Renderer.h"
 #include "Tear/EventManager.h"
 
@@ -11,34 +11,16 @@ std::string pad(size_t count, size_t length = 6, char character = '0') {
 	return s + t;
 }
 
-class Scene {
-public:
-	void update() {
-		++frameCount;
-
-		if (frameCount > 100000) {
-			Tear::close();
-		}
-
-		Tear::Renderer::set(0, 0, "FrameCount: " + pad(frameCount));
-	}
-
-private:
-	size_t frameCount = 0;
-};
-
 int main() {
-	Tear::initialize();
-	Tear::Renderer::initialize();
+	Tear::Session session;
+	Tear::Renderer renderer(session.getSequence(), 100, 80);
+	
+	for (size_t frameCount = 0; frameCount < 100000 && session.isOpen(); ++frameCount) {
+		// renderer.set(0, 0, "Hello World");
+		// renderer.swapBuffers();
 
-	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+		// session.write(renderer.getBuffer());
 
-	while (Tear::isOpen()) {
-		if (scene)
-			scene->update();
-
-		Tear::Renderer::swapBuffers();
+		session.write("hello");
 	}
-
-	Tear::terminate();
 }

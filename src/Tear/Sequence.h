@@ -55,7 +55,5 @@ namespace Tear {
 		ModeSequence mode;
 		CommandSequence command;
 		KeySequence key;
-
-		void compose(const std::string& term);
 	};
 }

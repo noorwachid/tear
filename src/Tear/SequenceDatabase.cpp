@@ -32,6 +32,19 @@ namespace Tear {
 		}
 	}
 
+	std::shared_ptr<Sequence> SequenceDatabase::get() {
+		if (!data) {
+			return nullptr;
+		}
+
+		auto sequence = std::make_shared<Sequence>();
+		sequence->mode = composeMode();
+		sequence->command = composeCommand();
+		sequence->key = composeKey();
+
+		return sequence;
+	}
+
 	bool SequenceDatabase::readFile(const std::string& path) {
 		FILE *file = ::fopen(path.c_str(), "rb");
 		if (!file) 
@@ -102,10 +115,6 @@ namespace Tear {
 
 		stringOffset = headerSize + header[1] + header[2] + numSecSize * header[3];
 		tableOffset = stringOffset + 2 * header[4];
-	}
-
-	bool SequenceDatabase::exists() {
-		return data;
 	}
 
 	ModeSequence SequenceDatabase::composeMode() {

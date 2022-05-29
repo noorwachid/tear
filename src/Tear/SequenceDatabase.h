@@ -8,13 +8,13 @@ namespace Tear {
 		SequenceDatabase(const std::string& termName);
 		~SequenceDatabase();
 
-		bool exists();
+		std::shared_ptr<Sequence> get();
 
+	private:
 		ModeSequence composeMode();
 		CommandSequence composeCommand();
 		KeySequence composeKey();
 
-	private:
 		bool readFolder(const std::string& path);
 		bool readFile(const std::string& path);
 
