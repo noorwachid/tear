@@ -52,7 +52,7 @@ namespace Tear
 
                 if (frontPixel.codepoint != backPixel.codepoint) 
                 {
-                    buffer += sequence->command.Move(x, y);
+                    buffer += sequence->command.MoveCursor(x, y);
                     buffer += Utf8::ToString(backPixel.codepoint);
 
                     frontPixel = backPixel;

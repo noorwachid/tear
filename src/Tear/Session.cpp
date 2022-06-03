@@ -51,6 +51,7 @@ namespace Tear
 
 		open = true;
 
+		previousState = std::make_shared<SessionState>();
 		SavePreviousState();
 	}
 

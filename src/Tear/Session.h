@@ -41,7 +41,7 @@ namespace Tear
 		std::string term;
 		std::shared_ptr<Frame> frame;
 		std::shared_ptr<Sequence> sequence;
-		SessionState* previousState;
+		std::shared_ptr<SessionState> previousState;
 
 		std::string inputBuffer;
 		std::string outputBuffer;

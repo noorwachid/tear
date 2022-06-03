@@ -30,7 +30,7 @@ namespace Tear
 		std::string blink;
 		std::string reverse;
 
-		std::string Move(int x, int y) const 
+		std::string MoveCursor(int x, int y) const 
 		{
 			return "\033[" + std::to_string(y + 1) + ";" + std::to_string(x + 1) + "H";
 		}

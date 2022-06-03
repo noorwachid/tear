@@ -17,8 +17,10 @@ std::string Pad(size_t count, size_t length = 6, char character = '0')
 int main() 
 {
 	Tear::Session session;
+	auto sequence = session.GetSequence();
 
-	session.Write(session.GetSequence()->command.Move(1, 1) + "Hello World");
+	session.Write(sequence->command.Move(1, 1) + "Hello World");
+	session.Write(sequence->command.Move(2, 2) + "Hello World");
 
 	std::this_thread::sleep_for(std::chrono::seconds(5));
 }
