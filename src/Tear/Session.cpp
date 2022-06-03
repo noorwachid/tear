@@ -8,52 +8,62 @@
 #include <sys/select.h>
 #include <unistd.h>
 
-namespace Tear {
-	struct SessionState {
+namespace Tear 
+{
+	void RestorePreviousState();
+	void SavePreviousState();
+
+	struct SessionState 
+	{
 		::termios data;
 	};
 
-	Session::Session() {
-		initialize();
+	Session::Session() 
+	{
+		Initialize();
 	}
 
-	Session::~Session() {
-		terminate();
+	Session::~Session() 
+	{
+		Terminate();
 	}
 
-	void Session::initialize() {
+	void Session::Initialize() 
+	{
 		descriptor = ::open("/dev/tty", O_RDWR);
 		if (descriptor < 0) 
-			terminateWithError("Failed to open descriptor");
+			TerminateWithError("Failed to open descriptor");
 
 		const char* envTerm = ::getenv("TERM");
 		if (!envTerm) 
-			terminateWithError("No terminal is found");
+			TerminateWithError("No terminal is found");
 
 		term = envTerm;
 		
 		frame = std::make_shared<Frame>();
 		if (!frame) 
-			terminateWithError("Failed to listen frame descriptor");
+			TerminateWithError("Failed to listen frame descriptor");
 
 		SequenceDatabase sequenceDatabase(term);
 		sequence = sequenceDatabase.get();
 		if (!sequence) 
-			terminateWithError("Terminal is not supported");
+			TerminateWithError("Terminal is not supported");
 
 		open = true;
 
-		savePreviousState();
+		SavePreviousState();
 	}
 
-	void Session::terminateWithError(const std::string& message) {
-		terminate();
+	void Session::TerminateWithError(const std::string& message) 
+	{
+		Terminate();
 		std::cout << message << "\n";
 		std::exit(1);
 	}
 
-	void Session::terminate() {
-		restorePreviousState();
+	void Session::Terminate() 
+	{
+		RestorePreviousState();
 
 		if (descriptor > 0) 
 			::close(descriptor);
@@ -61,7 +71,8 @@ namespace Tear {
 
 	// Term Management System
 
-	void Session::savePreviousState() {
+	void Session::SavePreviousState() 
+	{
 		::tcgetattr(descriptor, &previousState->data);
 
 		::termios currentState = previousState->data;
@@ -75,15 +86,16 @@ namespace Tear {
 
 		::tcsetattr(descriptor, TCSAFLUSH, &currentState);
 
-		write(
+		Write(
 			sequence->mode.enterCa +
 			sequence->command.hideCursor +
 			sequence->command.clear
 		);
 	}
 
-	void Session::restorePreviousState() {
-		write(
+	void Session::RestorePreviousState() 
+	{
+		Write(
 			sequence->command.showCursor +
 			sequence->command.reset +
 			sequence->command.clear +
@@ -93,15 +105,18 @@ namespace Tear {
 		::tcsetattr(descriptor, TCSAFLUSH, &previousState->data);
 	}
 	
-	void Session::close() {
+	void Session::Close() 
+	{
 		open = false;
 	}
 
-	void Session::write(const std::string& buffer) {
+	void Session::Write(const std::string& buffer) 
+	{
 		::write(descriptor, buffer.data(), buffer.size());
 	}
 
-	std::string Session::read(size_t chunk) {
+	std::string Session::Read(size_t chunk) 
+	{
 		std::vector<char> buffer(chunk, 0);
 
 		ssize_t byteRead = ::read(

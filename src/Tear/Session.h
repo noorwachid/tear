@@ -4,33 +4,35 @@
 #include "Sequence.h"
 #include "Event.h"
 
-namespace Tear {
+namespace Tear 
+{
 	struct SessionState;
 
-	class Session {
+	class Session 
+	{
 	public:
 		Session();
 		~Session();
 
 	public:
-		void close();
-		bool isOpen() const { return open; }
+		void Close();
+		bool IsOpen() const { return open; }
 
-		void write(const std::string& buffer);
-		std::string read(size_t chuck = 64);
+		void Write(const std::string& buffer);
+		std::string Read(size_t chuck = 64);
 
-		int getDescriptor();
-		const std::string& getTerm() const { return term; }
-		const std::shared_ptr<Frame>& getFrame() const { return frame; }
-		const std::shared_ptr<Sequence>& getSequence() const { return sequence; }
+		int GetDescriptor();
+		const std::string& GetTerm() const { return term; }
+		const std::shared_ptr<Frame>& GetFrame() const { return frame; }
+		const std::shared_ptr<Sequence>& GetSequence() const { return sequence; }
 
 	private:
-		void initialize();
-		void terminate();
-		void terminateWithError(const std::string& message);
+		void Initialize();
+		void Terminate();
+		void TerminateWithError(const std::string& message);
 
-		void restorePreviousState();
-		void savePreviousState();
+		void RestorePreviousState();
+		void SavePreviousState();
 
 	private:
 		bool open = true;

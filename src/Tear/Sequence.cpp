@@ -1,5 +1,6 @@
 #include "Sequence.h"
 #include "SequenceDatabase.h"
 
-namespace Tear {
+namespace Tear 
+{
 }

@@ -5,8 +5,10 @@
 #include <termios.h>
 #include <unistd.h>
 
-namespace Tear {
-	SequenceDatabase::SequenceDatabase(const std::string& term) {
+namespace Tear 
+{
+	SequenceDatabase::SequenceDatabase(const std::string& term) 
+	{
 		data = nullptr;
 
 		if (term.empty()) 
@@ -15,18 +17,20 @@ namespace Tear {
 		this->termName = term;
 
 		const char* terminfoPath = ::getenv("TERMINFO");
-		if (terminfoPath && readFolder(terminfoPath)) 
+		if (terminfoPath && ReadFolder(terminfoPath)) 
 			return;
 
 		const char* homePath = ::getenv("HOME");
-		if (homePath && readFolder(std::string(homePath) + "/.terminfo")) 
+		if (homePath && ReadFolder(std::string(homePath) + "/.terminfo")) 
 			return;
 
-		readFolder("/usr/share/terminfo");
+		ReadFolder("/usr/share/terminfo");
 	}
 
-	SequenceDatabase::~SequenceDatabase() {
-		if (data) {
+	SequenceDatabase::~SequenceDatabase() 
+	{
+		if (data) 
+		{
 			delete[] data;
 			data = nullptr;
 		}
@@ -38,27 +42,29 @@ namespace Tear {
 		}
 
 		auto sequence = std::make_shared<Sequence>();
-		sequence->mode = composeMode();
-		sequence->command = composeCommand();
-		sequence->key = composeKey();
+		sequence->mode = ComposeMode();
+		sequence->command = ComposeCommand();
+		sequence->key = ComposeKey();
 
 		return sequence;
 	}
 
-	bool SequenceDatabase::readFile(const std::string& path) {
+	bool SequenceDatabase::ReadFile(const std::string& path) {
 		FILE *file = ::fopen(path.c_str(), "rb");
 		if (!file) 
 			return false;
 
 		struct stat fileStat;
-		if (::fstat(::fileno(file), &fileStat) != 0) {
+		if (::fstat(::fileno(file), &fileStat) != 0) 
+		{
 			::fclose(file);
 
 			return false;
 		}
 
 		data = new char[fileStat.st_size];
-		if (fread(data, 1, fileStat.st_size, file) != (size_t) fileStat.st_size) {
+		if (fread(data, 1, fileStat.st_size, file) != (size_t) fileStat.st_size) 
+		{
 			delete[] data;
 			data = nullptr;
 			::fclose(file);
@@ -67,32 +73,34 @@ namespace Tear {
 		}
 
 		::fclose(file);
-		calculateOffsets();
+		CalculateOffsets();
 
 		return true;
 	}
 
-	bool SequenceDatabase::readFolder(const std::string& prefixPath) {
+	bool SequenceDatabase::ReadFolder(const std::string& prefixPath) 
+	{
 		char tmp[4096];
 
 		// GNU/Linux
 		snprintf(tmp, sizeof(tmp), "%s/%c/%s", prefixPath.c_str(), termName[0], termName.c_str());
 		tmp[sizeof(tmp)-1] = '\0';
 
-		if (readFile(tmp)) 
+		if (ReadFile(tmp)) 
 			return true;
 
 		// MacOS
 		snprintf(tmp, sizeof(tmp), "%s/%x/%s", prefixPath.c_str(), termName[0], termName.c_str());
 		tmp[sizeof(tmp)-1] = '\0';
 
-		if (readFile(tmp)) 
+		if (ReadFile(tmp)) 
 			return true;
 
 		return false;
 	}
 
-	char* SequenceDatabase::duplicate(int str, int table) {
+	char* SequenceDatabase::Duplicate(int str, int table) 
+	{
 		const int16_t off = *(int16_t*) (data + str);
 		const char *src = data + table + off;
 		int len = strlen(src);
@@ -102,13 +110,15 @@ namespace Tear {
 		return dst;
 	}
 
-	void SequenceDatabase::calculateOffsets() {
+	void SequenceDatabase::CalculateOffsets() 
+	{
 		alternateSlice = 542;
 		headerSize = 12;
 		header = (int16_t*) data;
 		numSecSize = header[0] == alternateSlice ? 4 : 2;
 
-		if ((header[1] + header[2]) % 2) {
+		if ((header[1] + header[2]) % 2) 
+		{
 			// old quirk to align everything on word boundaries
 			header[2] += 1;
 		}
@@ -117,43 +127,46 @@ namespace Tear {
 		tableOffset = stringOffset + 2 * header[4];
 	}
 
-	ModeSequence SequenceDatabase::composeMode() {
+	ModeSequence SequenceDatabase::ComposeMode() 
+	{
 		ModeSequence sequence;
 
 		const int16_t commandOffsets[] = {
 			28, 40, 16, 13, 5, 39, 36, 27, 26, 34, 89, 88,
 		};
 
-		sequence.enterCa = duplicate(stringOffset + 2 * commandOffsets[0], tableOffset);
-		sequence.exitCa = duplicate(stringOffset + 2 * commandOffsets[1], tableOffset);
-		sequence.enterKeypad = duplicate(stringOffset + 2 * commandOffsets[10], tableOffset);
-		sequence.exitKeypad = duplicate(stringOffset + 2 * commandOffsets[11], tableOffset);
+		sequence.enterCa = Duplicate(stringOffset + 2 * commandOffsets[0], tableOffset);
+		sequence.exitCa = Duplicate(stringOffset + 2 * commandOffsets[1], tableOffset);
+		sequence.enterKeypad = Duplicate(stringOffset + 2 * commandOffsets[10], tableOffset);
+		sequence.exitKeypad = Duplicate(stringOffset + 2 * commandOffsets[11], tableOffset);
 		sequence.enterMouse = "\x1b[?1000h\x1b[?1002h\x1b[?1015h\x1b[?1006h";
 		sequence.exitMouse = "\x1b[?1006l\x1b[?1015l\x1b[?1002l\x1b[?1000l";
 
 		return sequence;
 	}
 
-	CommandSequence SequenceDatabase::composeCommand() {
+	CommandSequence SequenceDatabase::ComposeCommand() 
+	{
 		CommandSequence sequence;
 
 		const int16_t commandOffsets[] = {
 			28, 40, 16, 13, 5, 39, 36, 27, 26, 34, 89, 88,
 		};
 
-		sequence.showCursor = duplicate(stringOffset + 2 * commandOffsets[2], tableOffset);
-		sequence.hideCursor = duplicate(stringOffset + 2 * commandOffsets[3], tableOffset);
-		sequence.clear = duplicate(stringOffset + 2 * commandOffsets[4], tableOffset);
-		sequence.reset = duplicate(stringOffset + 2 * commandOffsets[5], tableOffset);
-		sequence.underlined = duplicate(stringOffset + 2 * commandOffsets[6], tableOffset);
-		sequence.bold = duplicate(stringOffset + 2 * commandOffsets[7], tableOffset);
-		sequence.blink = duplicate(stringOffset + 2 * commandOffsets[8], tableOffset);
-		sequence.reverse = duplicate(stringOffset + 2 * commandOffsets[9], tableOffset);
+		sequence.showCursor = Duplicate(stringOffset + 2 * commandOffsets[2], tableOffset);
+		sequence.hideCursor = Duplicate(stringOffset + 2 * commandOffsets[3], tableOffset);
+		sequence.clear = Duplicate(stringOffset + 2 * commandOffsets[4], tableOffset);
+		sequence.reset = Duplicate(stringOffset + 2 * commandOffsets[5], tableOffset);
+		sequence.underlined = Duplicate(stringOffset + 2 * commandOffsets[6], tableOffset);
+		sequence.bold = Duplicate(stringOffset + 2 * commandOffsets[7], tableOffset);
+		sequence.blink = Duplicate(stringOffset + 2 * commandOffsets[8], tableOffset);
+		sequence.reverse = Duplicate(stringOffset + 2 * commandOffsets[9], tableOffset);
 
 		return sequence;
 	}
 
-	KeySequence SequenceDatabase::composeKey() {
+	KeySequence SequenceDatabase::ComposeKey() 
+	{
 		KeySequence sequence;
 
 		const int16_t keyOffsets[] = {
@@ -168,8 +181,9 @@ namespace Tear {
 			87, 61, 79, 83,
 		};
 
-		for (size_t i = 0; i < sequence.data.size(); ++i) {
-			sequence.data[i] = duplicate(stringOffset + 2 * keyOffsets[i], tableOffset);
+		for (size_t i = 0; i < sequence.data.size(); ++i) 
+		{
+			sequence.data[i] = Duplicate(stringOffset + 2 * keyOffsets[i], tableOffset);
 		}
 
 		return sequence;

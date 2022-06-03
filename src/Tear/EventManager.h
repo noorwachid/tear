@@ -5,13 +5,15 @@
 #include <unordered_map>
 #include <functional>
 
-namespace Tear {
+namespace Tear 
+{
 	using EventListener = std::function<void (Event&)>;
 	
-	class EventManager {
+	class EventManager 
+	{
 	public:
-		void emit(Event& event);
-		void subscribe(const std::string& type, const EventListener& listener);
+		void Emit(Event& event);
+		void Subscribe(const std::string& type, const EventListener& listener);
 
 	private:
 		std::unordered_map<std::string, std::vector<EventListener>> listenerMap;

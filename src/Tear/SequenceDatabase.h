@@ -2,8 +2,10 @@
 
 #include "Sequence.h"
 
-namespace Tear {
-	class SequenceDatabase {
+namespace Tear 
+{
+	class SequenceDatabase 
+	{
 	public:
 		SequenceDatabase(const std::string& termName);
 		~SequenceDatabase();
@@ -11,16 +13,16 @@ namespace Tear {
 		std::shared_ptr<Sequence> get();
 
 	private:
-		ModeSequence composeMode();
-		CommandSequence composeCommand();
-		KeySequence composeKey();
+		ModeSequence ComposeMode();
+		CommandSequence ComposeCommand();
+		KeySequence ComposeKey();
 
-		bool readFolder(const std::string& path);
-		bool readFile(const std::string& path);
+		bool ReadFolder(const std::string& path);
+		bool ReadFile(const std::string& path);
 
-		char* duplicate(int str, int table);
+		char* Duplicate(int str, int table);
 
-		void calculateOffsets();
+		void CalculateOffsets();
 
 	private:
 		char* data;

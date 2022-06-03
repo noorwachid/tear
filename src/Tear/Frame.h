@@ -3,26 +3,28 @@
 #include <array>
 #include <vector>
 
-namespace Tear {
-    struct Pixel {
+namespace Tear 
+{
+    struct Pixel 
+    {
         uint32_t codepoint = ' ';
 
         Pixel() = default;
-        Pixel(int newCodepoint): codepoint(newCodepoint) {
-        }
+        Pixel(int newCodepoint): codepoint(newCodepoint) {}
     };
 
 	using FrameDescriptor = std::array<int, 2>;
 
-	class Frame {
+	class Frame 
+    {
 	public:
         Frame();
         ~Frame();
 
-        bool isOpen() { return open; }
-		int getWidth() const { return width; }  
-		int getHeight() const { return height; }
-		const FrameDescriptor& getDescriptor() const { return descriptor; }
+        bool IsOpen() { return open; }
+		int GetWidth() const { return width; }  
+		int GetHeight() const { return height; }
+		const FrameDescriptor& GetDescriptor() const { return descriptor; }
 
 
 	private:
@@ -32,14 +34,15 @@ namespace Tear {
 		FrameDescriptor descriptor;
 	};
 
-    struct FrameBuffer {
+    struct FrameBuffer 
+    {
         std::vector<Pixel> pixels;
 
-        void recreate(int newWidth, int newHeight);
-        void set(int x, int y, const Pixel& cell);
+        void Recreate(int newWidth, int newHeight);
+        void Set(int x, int y, const Pixel& cell);
 
-        const Pixel& get(int x, int y) const;
-        Pixel& get(int x, int y);
+        const Pixel& Get(int x, int y) const;
+        Pixel& Get(int x, int y);
 
         int width;
         int height;
